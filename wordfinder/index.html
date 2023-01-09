@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WordFinder</title>
+    <link type="text/css" href="css/wordfinder.css" rel="stylesheet" />
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="js/gridboard.js"></script>
+    <script src="js/wordfinder.js"></script>
+  </head>
+  <body>
+
+
+    <div>
+      <button id="create-grid">Recreate board</button>
+      <label for="words-count">Max words count:
+        <input id="words-count" type="number" min="5" max="10" step="1" value="5">
+      </label>
+      <button id="say-again">Say again</button>
+      <div id="wordfinder-board"></div>
+      <script>
+        window.synth = window.speechSynthesis;
+        window.voice = getVoice()
+        function recreate() {
+          var wf;
+          const req = new XMLHttpRequest();
+          req.onload = (e) => {
+            var words = []
+            Object.entries(req.response).forEach(([key, value]) => {  
+              if (key !== "paragraph") {
+                words.push(...value)
+              }
+            })
+            var count = $('#words-count').val()
+            var finalWords = []
+            
+            for (var i = 0; i < count; i++) {
+              var index = Math.floor(Math.random() * (words.length + 1))
+              finalWords.push(words[index])
+            }
+            window.finalWords=finalWords
+            speak(finalWords)
+            wf = new WordFinder({
+              id: 'wordfinder-board',
+              width: count,
+              height: count,
+              words: finalWords
+            })
+          };
+          req.open("GET", "../words/flashcards.json");
+          req.responseType = "json";
+          req.send();
+        }
+
+        function getVoice() {
+          var voices = window.synth.getVoices();
+            for (let i = 0; i < voices.length; i++) {
+              if (voices[i].lang === "en-US") {
+                return voices[i];
+                break;
+              }
+            }
+            // return first one as fallback
+          return voices[0]
+        }
+        function speak(words) {
+          for (i in words) {
+            const utterThis = new SpeechSynthesisUtterance(words[i]);
+              utterThis.voice = voice;
+              utterThis.pitch = 1;
+              utterThis.rate = 1;
+              window.synth.speak(utterThis);
+          }
+        }
+        function sayAgain() {
+          speak(window.finalWords)
+        }
+
+        recreate()
+        $('#create-grid').click(recreate);
+        $('#say-again').click(sayAgain);
+
+      </script>  
+    </div>
+  </body>
+</html>
