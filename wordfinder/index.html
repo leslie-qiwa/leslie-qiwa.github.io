@@ -6,6 +6,7 @@
     <script src="../lib/jquery-1.10.2.min.js"></script>
     <script src="js/gridboard.js"></script>
     <script src="js/wordfinder.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
 
@@ -16,12 +17,12 @@
         <input id="words-count" type="number" min="5" max="10" step="1" value="5">
       </label>
       <button id="say-again">Say again</button>
+      <button id="show-words">Show words</button>
       <div id="wordfinder-board"></div>
       <script>
         window.synth = window.speechSynthesis;
         window.voice = getVoice()
         function recreate() {
-          var wf;
           const req = new XMLHttpRequest();
           req.onload = (e) => {
             var words = []
@@ -39,7 +40,7 @@
             }
             window.finalWords=finalWords
             speak(finalWords)
-            wf = new WordFinder({
+            window.wf = new WordFinder({
               id: 'wordfinder-board',
               width: count,
               height: count,
@@ -74,11 +75,13 @@
         function sayAgain() {
           speak(window.finalWords)
         }
+        function showWords() {
+          window.wf.UnhideWords(window.finalWords)
+        }
 
         recreate()
         $('#create-grid').click(recreate);
-        $('#say-again').click(sayAgain);
-
+        $('#show-words').click(showWords);
       </script>  
     </div>
   </body>

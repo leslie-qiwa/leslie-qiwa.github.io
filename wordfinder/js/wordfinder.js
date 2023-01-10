@@ -5,46 +5,46 @@
  */
 var WordFinder = function(instanceConfig) {
 
-  var version = 1,
+  var version = 1;
 
   /**
    * selection Object - tracks what the user is selecting
    */
-  selection = {
+  var selection = {
     x: 0,
     y: 0,
     x2: 0,
     y2: 0,
     selecting: false
-  },
+  };
 
   /**
    * Configuration params with defaults
    */
-  config = {
+  var config = {
     height: 20, // height in grid squares
     width: 20, // width in grid squares
     id: 'wordfinder', // ID for wrapper DOM object
     words: [] // on init, this gets transferred to the words property
-  },
+  };
 
   /**
    * DOM pointers object
    */
-  dom = {
+  var dom = {
     wf: '', // whole wordfinder wrapper
     board: '', // board Dom element
-  },
+  };
 
   /**
    * GridBoard instance
    */
-  grid = {},
+  var grid = {};
 
   /**
    * Collection of words
    */
-  words = {};
+  var words = {};
 
   /**
    * Abstraction for grid's loadword
@@ -60,15 +60,12 @@ var WordFinder = function(instanceConfig) {
       }
       tmpWords[word] = {
         line: line,
-        found: false
+        found: false,
+        added: false,
       };
     };
 
     words = tmpWords;
-    // now add each word to words board
-    for (w in rawWords) {
-      //dom.words.append('<li data-word="'+word+'">'+rawWords[w]+'</li>');
-    }
     return true;
   };
 
@@ -153,16 +150,20 @@ var WordFinder = function(instanceConfig) {
       if (words[word].found) { continue; }
 
       line = words[word].line;
-      console.log('Checking word: '+ word, line);
       if ( (x == line.x && y == line.y && x2 == line.x2 && y2 == line.y2) ||
           (x2 == line.x && y2 == line.y && x == line.x2 && y == line.y2) ) {
         dom.header.html('<p>Congratulation! You found <b>' + word + '</b>!</p>');
         words[word].found = true;
         // highlight line on board
         grid.highlightBoard(line);
-        // cross off the word list
+        // cross off the word list if it is shown already
+        if (words[word].added) {
+          dom.words.find('li[data-word='+word+']').addClass('found');
+        } else {
+          dom.words.append('<li class="found" data-word="'+word+'">'+word+'</li>');
+          words[word].added = true
+        }
         //dom.words.find('li[data-word='+word+']').addClass('found');
-        dom.words.append('<li data-word="'+word+'">'+word+'</li>');
 
         // speak 
         const utterThis = new SpeechSynthesisUtterance("Congratulation! You found " + word);
@@ -232,7 +233,6 @@ var WordFinder = function(instanceConfig) {
       config.width += 1;
       config.height += 1;
     }
-    console.log(config)
     grid = new GridBoard(dom.canvas.board, dom.canvas.control, config.width, config.height);
 
     // Load words
@@ -267,6 +267,15 @@ var WordFinder = function(instanceConfig) {
     // Get Score?
     // Reset / Reshuffle - reload current words
 
+    UnhideWords: function(rawWords) {
+      for (word in words) {
+        if (words[word].found || words[word].added) {
+          continue
+        }
+        words[word].added = true
+        dom.words.append('<li data-word="'+word+'">'+word+'</li>');
+      }  
+    }
   }
 
 };

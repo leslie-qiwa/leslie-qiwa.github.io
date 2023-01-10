@@ -14,7 +14,7 @@ var GridBoard = function(board, control, width, height){
 
   var self = this,
     gridRows = [],
-    cellSize = 40, // pixel height and width of cells
+    cellSize = 80, // pixel height and width of cells
     hCellSize = cellSize / 2, // half cellSize
     tryCap = 500,
     pWidth = cellSize * width,
