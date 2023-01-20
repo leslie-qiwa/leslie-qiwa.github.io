@@ -152,7 +152,7 @@ var WordFinder = function(instanceConfig) {
       line = words[word].line;
       if ( (x == line.x && y == line.y && x2 == line.x2 && y2 == line.y2) ||
           (x2 == line.x && y2 == line.y && x == line.x2 && y == line.y2) ) {
-        dom.header.html('<p>Congratulation! You found <b>' + word + '</b>!</p>');
+        //dom.header.html('<p>Congratulation! You found <b>' + word + '</b>!</p>');
         words[word].found = true;
         // highlight line on board
         grid.highlightBoard(line);
@@ -164,18 +164,11 @@ var WordFinder = function(instanceConfig) {
           words[word].added = true
         }
         //dom.words.find('li[data-word='+word+']').addClass('found');
-
-        // speak 
-        const utterThis = new SpeechSynthesisUtterance("Congratulation! You found " + word);
-              utterThis.voice = window.voice;
-              utterThis.pitch = 1;
-              utterThis.rate = 1;
-              window.synth.speak(utterThis);
         return true;
       }
     }
 
-    dom.header.html('<p class="no">Try again. Maybe it is at different place.</p>');
+    //dom.header.html('<p class="no">Try again. Maybe it is at different place.</p>');
     return false;
   }
 
@@ -212,7 +205,8 @@ var WordFinder = function(instanceConfig) {
   dom.wf = $('#'+config.id);
   dom.wf.addClass('wordfinder');
   // Build needed elements and then add DOM pointers
-  dom.wf.html('<div class="header"></div><div class="gridboard"></div><div class="words"></div>');
+  //dom.wf.html('<div class="header"></div><div class="gridboard"></div><div class="words"></div>');
+  dom.wf.html('<div class="gridboard"></div><div class="words"></div>');
   dom.grid = dom.wf.find('.gridboard');
   dom.grid.html('<canvas class="board"></canvas><canvas class="control"></canvas>')
   dom.canvas = {
@@ -220,7 +214,7 @@ var WordFinder = function(instanceConfig) {
     control : dom.grid.find('.control')
   };
   dom.words = dom.wf.find('.words');
-  dom.header = dom.wf.find('.header');
+  //dom.header = dom.wf.find('.header');
 
   // Init grid
   var retryCount = 0

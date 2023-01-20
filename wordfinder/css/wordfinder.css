@@ -12,6 +12,7 @@
   -ms-user-select: none;
   user-select: none;
 }
+
 /* line 21, ../sass/wordfinder.scss */
 .wordfinder .header {
   width: 600px;
@@ -57,4 +58,15 @@
 .wordfinder .words li.found {
   text-decoration: line-through;
   color: #888;
+}
+
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
 }

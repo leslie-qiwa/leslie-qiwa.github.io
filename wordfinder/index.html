@@ -12,16 +12,14 @@
 
 
     <div>
-      <button id="create-grid">Recreate board</button>
+      <button id="create-grid" class="button">Recreate board</button>
       <label for="words-count">Max words count:
         <input id="words-count" type="number" min="5" max="10" step="1" value="5">
       </label>
-      <button id="say-again">Say again</button>
-      <button id="show-words">Show words</button>
+      <button id="say-again" class="button">Say again</button>
+      <button id="show-words" class="button">Show words</button>
       <div id="wordfinder-board"></div>
       <script>
-        window.synth = window.speechSynthesis;
-        window.voice = getVoice()
         function recreate() {
           const req = new XMLHttpRequest();
           req.onload = (e) => {
@@ -52,25 +50,18 @@
           req.send();
         }
 
-        function getVoice() {
-          var voices = window.synth.getVoices();
-            for (let i = 0; i < voices.length; i++) {
-              if (voices[i].lang === "en-US") {
-                return voices[i];
-                break;
-              }
-            }
-            // return first one as fallback
-          return voices[0]
-        }
         function speak(words) {
-          for (i in words) {
-            const utterThis = new SpeechSynthesisUtterance(words[i]);
-              utterThis.voice = voice;
-              utterThis.pitch = 1;
-              utterThis.rate = 1;
-              window.synth.speak(utterThis);
-          }
+          var index = 0;
+          var audio = new Audio("../words/audio/" + words[index] + ".mp3");
+          audio.play();
+          index++;
+          audio.onended = function() {
+            if (index < words.length) {
+              audio.src ="../words/audio/" + words[index] + ".mp3";
+              audio.play();
+              index++;
+            };
+          };
         }
         function sayAgain() {
           speak(window.finalWords)
@@ -82,6 +73,7 @@
         recreate()
         $('#create-grid').click(recreate);
         $('#show-words').click(showWords);
+        $('#say-again').click(sayAgain);
       </script>  
     </div>
   </body>
